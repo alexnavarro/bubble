@@ -1,0 +1,61 @@
+apply plugin: 'android'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    signingConfigs {
+        debug {
+            storeFile file("../_sandbox/debug.keystore")
+        }
+
+        release {
+            def Properties keyProps = new Properties()
+            keyProps.load(new FileInputStream(file('../keystore.properties')))
+            storeFile file(keyProps['store'])
+            keyAlias keyProps['alias']
+            storePassword keyProps['storePass']
+            keyPassword keyProps['pass']
+        }
+
+    }
+
+
+    defaultConfig {
+        applicationId "com.eroad.bubble"
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+
+
+
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            debuggable true
+        }
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you the build even when errors are  can continue to check for errors in release builds,
+        // but continuefound:
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.google.android.gms:play-services:7.5.0'
+}
